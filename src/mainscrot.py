@@ -1229,49 +1229,49 @@ class MainScrot:
         '''Draw frame.'''
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.set_line_width(self.frameLineWidth)
-        cr.rectangle(self.x, self.y, self.rectWidth, self.rectHeight)
+        cr.rectangle(self.x - self.frameLineWidth, self.y - self.frameLineWidth, self.rectWidth + self.frameLineWidth * 2, self.rectHeight + self.frameLineWidth * 2)
         cr.stroke()
         
     def drawDragPoint(self, cr):
         '''Draw drag point.'''
         # Draw left top corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x, self.y, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x - self.dragPointRadius - 1, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw right top corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x + self.rectWidth, self.y, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x + self.rectWidth + self.dragPointRadius - 3, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw left bottom corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x, self.y + self.rectHeight, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x - self.dragPointRadius - 1, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw right bottom corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x + self.rectWidth, self.y + self.rectHeight, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x + self.rectWidth + 1, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw top side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x + self.rectWidth / 2, self.y, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x + self.rectWidth / 2, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw bottom side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x + self.rectWidth / 2, self.y + self.rectHeight, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x + self.rectWidth / 2, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw left side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x, self.y + self.rectHeight / 2, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x - self.dragPointRadius - 1, self.y + self.rectHeight / 2, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
         # Draw right side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
-        cr.arc(self.x + self.rectWidth, self.y + self.rectHeight / 2, self.dragPointRadius, 0, 2 * pi)
+        cr.rectangle(self.x + self.rectWidth + 1, self.y + self.rectHeight / 2, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
         
     def getDesktopSnapshot(self):
