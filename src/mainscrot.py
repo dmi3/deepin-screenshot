@@ -978,6 +978,16 @@ class MainScrot:
     def doubleClickRect(self, widget, event):
         '''Handle double click on window.'''
         (ex, ey) = self.getEventCoord(event)
+
+        if event.button == 2 and event.type == gtk.gdk.BUTTON_PRESS:
+            clipboard = gtk.clipboard_get()
+            clipboard.set_text(getCoordHEX(self.window, ex, ey))
+            clipboard.store()
+
+            self.window.window.set_cursor(None)
+            self.destroy(self.window)
+
+
         if isDoubleClick(event) and self.textDragFlag:
             textBuffer = self.textView.get_buffer()
             textBuffer.set_text(self.currentTextAction.getContent())
@@ -1166,7 +1176,9 @@ class MainScrot:
         if self.action == ACTION_WINDOW and self.rectWidth:
             drawMagnifier(cr, self.window, self.currentX, self.currentY,
                            '%d x %d' % (self.rectWidth, self.rectHeight),
-                            '%s' % (__("Tip Drag")), "RGB: %s" % str(getCoordHEX(self.window, self.currentX, self.currentY)))
+                            '↑ Mdl clck to copy',
+                            #'%s' % (__("Tip Drag")),
+                             "%s" % str(getCoordHEX(self.window, self.currentX, self.currentY)))
             self.drawWindowRectangle(cr)
         elif self.rectWidth:
             #Draw frame
