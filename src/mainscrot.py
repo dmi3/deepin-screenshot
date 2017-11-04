@@ -117,7 +117,7 @@ class MainScrot:
         self.window.connect("expose-event", self.redraw)
         self.window.connect("button-press-event", self.buttonPress)
 
-        self.window.connect("button-press-event", self.doubleClickRect)
+        self.window.connect("button-press-event", self.clickReact)
         self.window.connect("button-release-event", self.buttonRelease)
         self.window.connect("motion-notify-event", self.motionNotify)
         self.window.connect("key-press-event", self.keyPress)
@@ -978,16 +978,22 @@ class MainScrot:
             self.adjustColorbar()
             self.showColorbar()
 
-    def doubleClickRect(self, widget, event):
+    def clickReact(self, widget, event):
         '''Handle double click on window.'''
         (ex, ey) = self.getEventCoord(event)
 
-        if event.button == 2 and event.type == gtk.gdk.BUTTON_PRESS:
+        if isMiddleClick(event):
+            color = getCoordHEX(self.window, ex, ey)
+
             clipboard = gtk.clipboard_get()
-            clipboard.set_text(getCoordHEX(self.window, ex, ey))
+            clipboard.set_text(color)
             clipboard.store()
 
             self.window.window.set_cursor(None)
+
+            cmd = ('python', 'tipswindow.py', "Copied %s to clipboard" % color)
+            subprocess.Popen(cmd)
+
             self.destroy(self.window)
 
 

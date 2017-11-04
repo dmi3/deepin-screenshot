@@ -61,6 +61,10 @@ def getScreenSize():
     '''Get screen size.'''
     return gtk.gdk.get_default_root_window().get_size()
 
+def isMiddleClick(event):
+    '''Whether an event is middle click?'''
+    return event.button == 2 and event.type == gtk.gdk.BUTTON_PRESS
+
 def isDoubleClick(event):
     '''Whether an event is double click?'''
     return event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS
