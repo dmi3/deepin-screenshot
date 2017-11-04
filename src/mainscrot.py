@@ -1166,7 +1166,7 @@ class MainScrot:
         if self.action == ACTION_WINDOW and self.rectWidth:
             drawMagnifier(cr, self.window, self.currentX, self.currentY,
                            '%d x %d' % (self.rectWidth, self.rectHeight),
-                            '%s' % (__("Tip Drag")), "RGB: %s" % str(getCoordRGB(self.window, self.currentX, self.currentY)))
+                            '%s' % (__("Tip Drag")), "RGB: %s" % str(getCoordHEX(self.window, self.currentX, self.currentY)))
             self.drawWindowRectangle(cr)
         elif self.rectWidth:
             #Draw frame

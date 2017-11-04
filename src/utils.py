@@ -93,14 +93,14 @@ def gdkColorToString(gdkcolor):
 def encode(text):
     return unicode(text, sys.getfilesystemencoding())
 
-def getCoordRGB(widget, x, y):
+def getCoordHEX(widget, x, y):
     '''get coordinate's pixel. '''
     width, height = widget.get_size()
     colormap = widget.get_window().get_colormap()
     image = gtk.gdk.Image(gtk.gdk.IMAGE_NORMAL, widget.window.get_visual(), width, height)
     image.set_colormap(colormap)
     gdkcolor =  colormap.query_color(image.get_pixel(x, y))
-    return (gdkcolor.red / 256, gdkcolor.green / 256, gdkcolor.blue / 256)
+    return gdkColorToString(gdkcolor)
 
 def containerRemoveAll(container):
     ''' Removee all child widgets for container. '''
