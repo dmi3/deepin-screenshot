@@ -33,18 +33,18 @@ class DeepinScrotSetup:
 
     def __init__(self):
         ''' Init. '''
-        
+
         # Init widgets.
         self.window = self.initMainWindow()
         self.window.connect("destroy", lambda w: gtk.main_quit())
         # self.window.connect("size-allocate", lambda w, a: updateShape(w, a, 4))
         self.generalMainbox = gtk.VBox(False, 10)
-        # setup 
-        
-        
+        # setup
+
+
         self.bodyAlign = gtk.Alignment()
         self.bodyAlign.set_padding(10, 20, 10, 10)
-        
+
         imageSetupFrame = gtk.Frame("图片格式")
 
         imageSetupMainBox = gtk.VBox()
@@ -59,11 +59,11 @@ class DeepinScrotSetup:
         self.imageQualityHscale.set_update_policy(gtk.UPDATE_CONTINUOUS)
         imageQualityHbox.pack_start(self.imageQualityLabel, False, False)
         imageQualityHbox.pack_start(self.imageQualityHscale, False, False)
-        
+
         imageFormatHbox = gtk.HBox(False, 10)
         imageFormatLabel = gtk.Label("图片格式:")
 
-        
+
         imageFormatList = gtk.OptionMenu()
         imageFormatList.set_size_request(180, -1)
         menu = gtk.Menu()
@@ -76,17 +76,17 @@ class DeepinScrotSetup:
         imageFormatList.set_menu(menu)
         imageFormatHbox.pack_start(imageFormatLabel, False, False)
         imageFormatHbox.pack_start(imageFormatList, False, False)
-        
-        
+
+
         imageSetupMainBox.pack_start(imageQualityHbox)
         imageSetupMainBox.pack_start(imageFormatHbox)
-        
+
         imageQualityAlign = gtk.Alignment()
         imageQualityAlign.set_padding(10, 10, 10, 10)
         imageQualityAlign.add(imageSetupMainBox)
         imageSetupFrame.add(imageQualityAlign)
-        
-        # save 
+
+        # save
         saveProjectFrame = gtk.Frame("保存方案")
         saveProjectMainbox = gtk.VBox()
         self.tipsaveRadio = gtk.RadioButton(None, "提示保存")
@@ -96,7 +96,7 @@ class DeepinScrotSetup:
         self.saveFilenameEntry = gtk.Entry()
         saveFilenameHbox.pack_start(saveFilenameLabel, False, False)
         saveFilenameHbox.pack_start(self.saveFilenameEntry)
-        
+
         saveDirHbox = gtk.HBox(False, 10)
         saveDirLabel = gtk.Label("保存目录:")
         self.saveDirButton = gtk.FileChooserButton("dir")
@@ -104,51 +104,51 @@ class DeepinScrotSetup:
         saveDirHbox.pack_start(saveDirLabel, False, False)
         saveDirHbox.pack_start(self.saveDirButton)
         saveDirMainbox = gtk.VBox()
-        
+
         saveDirMainbox.pack_start(saveFilenameHbox)
         saveDirMainbox.pack_start(saveDirHbox)
         saveDirAlign = gtk.Alignment()
         saveDirAlign.set_padding(0, 0, 20, 10)
         saveDirAlign.add(saveDirMainbox)
-        
+
         saveProjectAlign = gtk.Alignment()
         saveProjectAlign.set_padding(10, 10, 10, 10)
-        
+
         saveProjectFrame.add(saveProjectAlign)
         saveProjectAlign.add(saveProjectMainbox)
         saveProjectMainbox.pack_start(self.tipsaveRadio)
         saveProjectMainbox.pack_start(self.autosaveRadio)
         saveProjectMainbox.pack_start(saveDirAlign)
-        
+
         # buttons
         controlBox = gtk.HBox(True, 5)
         controlAlign = gtk.Alignment()
         controlAlign.set(1.0, 0.0, 0.0, 0.0)
         controlAlign.add(controlBox)
-        
+
         okButton = gtk.Button(None, gtk.STOCK_OK)
         cancelButton = gtk.Button(None, gtk.STOCK_CANCEL)
         applyButton = gtk.Button(None, gtk.STOCK_APPLY)
         controlBox.pack_start(okButton)
         controlBox.pack_start(cancelButton)
         controlBox.pack_start(applyButton)
-        
-        
-        
+
+
+
         self.window.add(self.bodyAlign)
         self.bodyAlign.add(self.generalMainbox)
         self.generalMainbox.pack_start(imageSetupFrame)
         self.generalMainbox.pack_start(saveProjectFrame)
         self.generalMainbox.pack_start(controlAlign)
-        
 
-        
 
-        
+
+
+
         self.window.show_all()
         gtk.main()
-  
-        
+
+
     def initMainWindow(self):
         '''init Main Window'''
         window = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -158,8 +158,8 @@ class DeepinScrotSetup:
         window.set_default_size(300, 517)
         window.set_resizable(False)
         window.set_icon_from_file("../theme/logo/deepin-scrot.ico")
-        
+
         return window
-        
+
 if __name__ == '__main__':
     DeepinScrotSetup()

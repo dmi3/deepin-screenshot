@@ -39,49 +39,49 @@ def openFileDialog(fullscreen=True, filetype='png'):
                                    gtk.FILE_CHOOSER_ACTION_SAVE,
                                    (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
                                     gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT))
-        
+
 
     dialog.set_default_response(gtk.RESPONSE_ACCEPT)
     dialog.set_position(gtk.WIN_POS_CENTER)
     dialog.set_local_only(True)
-        
-    
+
+
     dialog.set_current_folder(os.environ['HOME'])
     dialog.set_current_name("%s%s.%s" % (DEFAULT_FILENAME, getFormatTime(), saveFiletype))
 
-       
-        
+
+
 
     optionMenu = gtk.OptionMenu()
     optionMenu.set_size_request(155, -1)
     menu = gtk.Menu()
     menu.set_size_request(155, -1)
-    
+
     pngItem = makeMenuItem('PNG (*.png)',
                  lambda item, data: setSaveFiletype(dialog, 'png'))
-    
+
     jpgItem = makeMenuItem('JPEG (*.jpeg)',
                  lambda item, data: setSaveFiletype(dialog, 'jpeg'))
-    
+
     bmpItem = makeMenuItem('BMP (*.bmp)',
                  lambda item, data: setSaveFiletype(dialog, 'bmp'))
-    
-    
-    
-    
+
+
+
+
     menu.append(pngItem)
     menu.append(jpgItem)
     menu.append(bmpItem)
     optionMenu.set_menu(menu)
-    
-    
+
+
     hbox = gtk.HBox()
     hbox.pack_end(optionMenu, False, False)
     dialog.vbox.pack_start(hbox, False, False)
-    hbox.show_all()                          
-            
+    hbox.show_all()
+
     response = dialog.run()
-        
+
     if response == gtk.RESPONSE_ACCEPT:
         filename = dialog.get_filename()
         pixbuf.save(filename, filetype)
@@ -93,7 +93,7 @@ def openFileDialog(fullscreen=True, filetype='png'):
 def setSaveFiletype(widget, filetype):
     widget.set_current_name("%s%s.%s" % (DEFAULT_FILENAME, getFormatTime(), filetype))
     saveFiletype =filetype
-       
+
 
 def processArguments():
     '''init processArguments '''
@@ -101,7 +101,7 @@ def processArguments():
     parser.add_option("-f", "--full", action="store_true", dest="fullscreen", help="Taking the fullscreen shot")
     parser.add_option("-w", "--window", action="store_true", dest="window", help="Taking the currently focused window")
     parser.add_option("-d", "--delay", dest="delay", type="int", help="wait NUM seconds before taking a shot", metavar="NUM")
-    
+
     (options, args) = parser.parse_args()
     #print parser.parse_args()
     if options.fullscreen and options.window:
@@ -123,14 +123,14 @@ def processArguments():
         MainScrot()
     else:
          MainScrot()
-        
-        
+
+
 
 if __name__ == '__main__':
     processArguments()
-    
-        
-        
-    
+
+
+
+
 
 

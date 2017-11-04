@@ -47,7 +47,7 @@ pygtk.require('2.0')
 
 class MainScrot:
     '''Main scrot.'''
-	
+
     def __init__(self):
         '''Init Main scrot.'''
 
@@ -56,37 +56,37 @@ class MainScrot:
         self.width = self.height = 0
         self.x = self.y = self.rectWidth = self.rectHeight = 0
         self.buttonToggle = None
-        
-        self.frameColor = "#00AEFF"# "#FFFF0" 
+
+        self.frameColor = "#00AEFF"# "#FFFF0"
         self.frameLineWidth = 2
         self.dragPosition = None
         self.dragStartX = self.dragStartY = self.dragStartOffsetX = self.drawStartOffsetY = 0
         self.dragPointRadius = 4
-        
+
         self.dragFlag = False
         self.showToolbarFlag = False
-        self.showColorbarFlag = False 
+        self.showColorbarFlag = False
         self.showTextWindowFlag = False
         self.textDragOffsetX = self.textDragOffsetY = 0
         self.saveFiletype = 'png'
-        
+
         self.toolbarOffsetX = 10
         self.toolbarOffsetY = 10
         #self.toolbarHeight = 50
-        
+
         self.actionSize = 2
         self.actionColor = "#FF0000"
         self.fontName = "Sans 10"
-        
 
-        
-        # default window 
+
+
+        # default window
         self.scrotWindowInfo = getScrotWindowInfo()
         self.windowFlag = True
 
         # keybinding map
         self.keyBindings = {}
-        
+
         # Init action list.
         self.currentAction = None
         self.actionList = []
@@ -97,16 +97,16 @@ class MainScrot:
         self.textModifyFlag = False
         self.drawTextLayoutFlag = False
 
-        
+
         # Get desktop background.
-        self.desktopBackground = self.getDesktopSnapshot() 
-        
+        self.desktopBackground = self.getDesktopSnapshot()
+
         # Init window.
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.fullscreen()
         self.window.set_icon_from_file("../theme/logo/deepin-scrot.ico")
         self.window.set_keep_above(True)
-        
+
         # Init event handle.
         self.window.add_events(gtk.gdk.KEY_RELEASE_MASK)
         self.window.add_events(gtk.gdk.POINTER_MOTION_MASK)
@@ -116,34 +116,34 @@ class MainScrot:
         self.window.connect("expose-event", lambda w, e: self.getCurrentCoord(w))
         self.window.connect("expose-event", self.redraw)
         self.window.connect("button-press-event", self.buttonPress)
-        
+
         self.window.connect("button-press-event", self.doubleClickRect)
         self.window.connect("button-release-event", self.buttonRelease)
         self.window.connect("motion-notify-event", self.motionNotify)
         self.window.connect("key-press-event", self.keyPress)
-        
+
         # Register key binding.
         self.registerKeyBinding("Escape", lambda : self.destroy(self.window))
         self.registerKeyBinding("C-s", self.saveSnapshotToFile)
         self.registerKeyBinding("Return", self.saveSnapshot)
         self.registerKeyBinding("C-z", self.undo)
-        
+
         # Init toolbar window.
         self.initToolbar()
-        
+
         # Init text window.
         self.initTextWindow()
-        
+
         # Init color window.
         self.initColorWindow()
-        
-       
+
+
         # Show.
         self.window.show_all()
-        
+
         gtk.main()
-        
-    
+
+
     def initColorWindow(self):
         ''' init ColorWindow'''
         paddingX = 5
@@ -151,12 +151,12 @@ class MainScrot:
         iconWidth = iconHeight = 28
         self.colorNum = 9
         self.iconIndex = 2
-        
+
         self.colorbarWindow = gtk.Window(gtk.WINDOW_POPUP)
         self.colorbarWindow.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_DIALOG)
         self.colorbarWindow.set_keep_above(True)
         self.colorbarWindow.set_transient_for(self.window)
-        
+
         self.colorbarWindow.set_decorated(False)
         self.colorbarWindow.set_resizable(False)
         self.colorbarWindow.set_default_size(100, 24)
@@ -178,8 +178,8 @@ class MainScrot:
 
         self.colorbarWindow.connect("size-allocate", lambda w, a: updateShape(w, a, 2))
         self.colorbarWindow.connect('expose-event', lambda w,e: exposeBackground(w, e, appTheme.getDynamicPixbuf("color_bg.png")))
-        
-    
+
+
         self.smallSizeButton = self.createSizeButton('small', 2)
         self.smallSizeButton.connect('button-press-event', lambda w, e: self.setIconIndex(2))
 
@@ -189,26 +189,26 @@ class MainScrot:
         self.bigSizeButton = self.createSizeButton('big', 5)
         self.bigSizeButton.connect('button-press-event', lambda w, e: self.setIconIndex(5))
 
-        
+
         self.sizeAlign = gtk.Alignment()
         self.sizeAlign.set(0.5,0.5,0,0)
         self.sizeAlign.set_padding(2, 1, 0, 0)
         self.sizeAlign.add(self.sizeBox)
         self.dynamicBox.pack_start(self.sizeAlign)
         self.colorbarBox.pack_start(self.dynamicBox)
-        
+
         self.fontLabel = gtk.Label("Sans 10")
         self.fontEvent = gtk.EventBox()
         self.fontEvent.add(self.fontLabel)
         self.fontEvent.set_visible_window(False)
-        self.fontEvent.connect("button-press-event", lambda w, e: self.openFontDialog()) 
+        self.fontEvent.connect("button-press-event", lambda w, e: self.openFontDialog())
         setClickableCursor(self.fontEvent)
         self.fontEvent.set_size_request(100, -1)
 
         separatorLabel = gtk.Label()
         drawSeparator(separatorLabel, 'sep')
         self.colorbarBox.pack_start(separatorLabel)
-        
+
         self.colorBox = gtk.EventBox()
 
         self.colorbarBox.pack_start(self.colorBox)
@@ -219,9 +219,9 @@ class MainScrot:
         self.colorBox.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("#FF0000"))
         self.colorBox.connect('expose-event', lambda w, e:self.setColorboxBorder(w))
         self.colorBox.connect('button-press-event', self.colorSetEvent)
-        
-            
-        
+
+
+
 
         self.vbox = gtk.VBox(False, 2)
         self.aboveHbox = gtk.HBox(False, 2)
@@ -289,14 +289,14 @@ class MainScrot:
 
         pinkButton = self.createColorButton('pink', False)
         pinkButton.connect('button-press-event', lambda w,e: self.setButtonColor('pink'))
-        
+
         wathetButton = self.createColorButton('wathet', False)
         wathetButton.connect('button-press-event', lambda w,e: self.setButtonColor('wathet'))
 
 
         self.vbox.pack_start(self.belowHbox)
         self.colorbarBox.pack_start(self.vbox)
-        
+
     def openFontDialog(self):
         '''open font dialog.'''
         self.fontDialog = gtk.FontSelectionDialog("font select")
@@ -311,13 +311,13 @@ class MainScrot:
         if response == gtk.RESPONSE_OK:
             self.fontName = self.fontDialog.get_font_name()
             self.fontLabel.set_label(self.fontDialog.get_font_name())
-        
+
         self.adjustToolbar()
         self.showToolbar()
         self.showColorbar()
         self.fontDialog.destroy()
-        
-       
+
+
     def colorSetEvent(self, widget, event):
         '''colorBox button_press event'''
         self.colorDialog = gtk.ColorSelectionDialog('Select color')
@@ -340,10 +340,10 @@ class MainScrot:
         self.showToolbar()
         self.showColorbar()
         self.colorDialog.destroy()
-    
+
     def setColorboxBorder(self, widget):
         '''set colorBox border '''
-        (x, y, width, height, depth) = widget.window.get_geometry() 
+        (x, y, width, height, depth) = widget.window.get_geometry()
         cr = widget.window.cairo_create()
         cr.set_line_width(2)
         cr.rectangle(0,0,width, height)
@@ -353,13 +353,13 @@ class MainScrot:
         cr.set_line_width(1)
         cr.set_source_rgb(*colorHexToCairo("#FFFFFF"))
         cr.stroke()
-        
-        
-        
-        
-        
 
-        
+
+
+
+
+
+
     def initToolbar(self):
         '''Init toolbar.'''
         # Init window.
@@ -381,7 +381,7 @@ class MainScrot:
         self.toolbarWindow.set_size_request(
             self.toolbarIconWidth * self.toolbarIconNum + self.toolbarPaddingX * 2,
             self.toolbarIconHeight + self.toolbarPaddingY * 2)
-        
+
         # Add action button.
         self.toolBox = gtk.HBox(False, 2)
         self.toolAlign = gtk.Alignment()
@@ -389,25 +389,25 @@ class MainScrot:
         self.toolAlign.set_padding(self.toolbarPaddingY + 2, self.toolbarPaddingY, self.toolbarPaddingX, self.toolbarPaddingX)
         self.toolAlign.add(self.toolBox)
         self.toolbarWindow.add(self.toolAlign)
-        
+
         self.actionRectangleButton = self.createActionButton("rect", __("Tip draw rectangle"))
         self.actionRectangleButton.connect("button-press-event", lambda w, e: self.setOtherInactive(w))
         self.actionRectangleButton.connect('toggled', lambda w: self.buttonToggled(w))
         self.actionRectangleButton.connect("button-release-event", lambda w, e: self.toggleReleaseEvent())
-        
 
-        
+
+
         self.actionEllipseButton = self.createActionButton("ellipse", __("Tip draw ellipse"))
         self.actionEllipseButton.connect("button-press-event", lambda w, e: self.setOtherInactive(w))
         self.actionEllipseButton.connect('toggled', lambda w: self.buttonToggled(w))
         self.actionEllipseButton.connect("button-release-event", lambda w, e: self.toggleReleaseEvent())
-        
+
         self.actionArrowButton = self.createActionButton("arrow", __("Tip draw arrow"))
         self.actionArrowButton.connect("button-press-event", lambda w, e: self.setOtherInactive(w))
         self.actionArrowButton.connect('toggled', lambda w: self.buttonToggled(w))
         self.actionArrowButton.connect("button-release-event", lambda w, e: self.toggleReleaseEvent())
-       
-        
+
+
         self.actionLineButton = self.createActionButton("line", __("Tip draw line"))
         self.actionLineButton.connect("button-press-event", lambda w, e: self.setOtherInactive(w))
         self.actionLineButton.connect('toggled', lambda w: self.buttonToggled(w))
@@ -423,11 +423,11 @@ class MainScrot:
 
         self.actionUndoButton = self.createOtherButton("undo", __("Tip undo"))
         self.actionUndoButton.connect("button-press-event", lambda w, e: self.undo())
-        
-        
+
+
         self.actionSaveButton = self.createOtherButton("save", __("Tip save"))
         self.actionSaveButton.connect("button-press-event", lambda w, e: self.saveSnapshotToFile())
-        
+
         separatorLabel = gtk.Button()
         drawSeparator(separatorLabel, 'sep')
         self.toolBox.pack_start(separatorLabel)
@@ -437,44 +437,44 @@ class MainScrot:
 
         self.actionFinishButton = self.createOtherButton("finish",__("Tip finish"))
         self.actionFinishButton.connect("button-press-event", lambda w, e: self.saveSnapshot())
-      
-      
+
+
     def setOtherInactive(self, button):
         buttonList = [self.actionRectangleButton, self.actionEllipseButton, self.actionArrowButton, self.actionLineButton,
                       self.actionTextButton]
-        
+
         for eachButton in buttonList:
             if eachButton == button:
                 continue
             eachButton.set_active(False)
-    
+
     def setAllInactive(self):
         buttonList = [self.actionRectangleButton, self.actionEllipseButton, self.actionArrowButton, self.actionLineButton,
                       self.actionTextButton]
-        
+
         for eachButton in buttonList:
             eachButton.set_active(False)
-        
+
     def isHaveOneToggled(self):
         buttonList = [self.actionRectangleButton, self.actionEllipseButton, self.actionArrowButton, self.actionLineButton,
                       self.actionTextButton]
-        
+
         for eachButton in buttonList:
             if eachButton.get_active():
                 return True
         return False
-    
+
     def toggleReleaseEvent(self):
         buttonList = [self.actionRectangleButton, self.actionEllipseButton, self.actionArrowButton, self.actionLineButton,
                       self.actionTextButton]
         self.isToggled = False
-        
+
         for eachButton in buttonList:
             if eachButton.get_active():
                 self.isToggled = True
-        
-        
-    
+
+
+
     def buttonToggled(self, widget):
         '''the button toggled'''
         if widget.get_active():
@@ -488,7 +488,7 @@ class MainScrot:
                 self.setActionType(ACTION_LINE)
             elif widget == self.actionTextButton:
                 self.setActionType(ACTION_TEXT)
-            
+
             self.showColorbar()
 
         else:
@@ -497,19 +497,19 @@ class MainScrot:
                 self.setActionType(ACTION_SELECT)
             elif self.actionList and self.isToggled or self.textActionList:
                 self.setActionType(None)
-            
-        
+
+
     def setIconIndex(self, index):
         '''Set icon index.'''
         self.iconIndex = index
         self.actionSize = index
         self.colorbarWindow.queue_draw()
-        
-        
+
+
     def getIconIndex(self):
         '''Get icon index.'''
         return self.iconIndex
-        
+
     def initTextWindow(self):
         '''Init text window.'''
         # Init window.
@@ -528,37 +528,37 @@ class MainScrot:
         self.textAlign.set(0.5, 0.5, 0, 0)
         self.textAlign.set_padding(10, 10, 10, 10)
         self.textVbox = gtk.VBox()
-        
+
 
         scrollWindow = gtk.ScrolledWindow()
         scrollWindow.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-        scrollWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC) 
+        scrollWindow.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 
         self.textView = gtk.TextView()
 
         textBuffer = self.textView.get_buffer()
         self.textView.connect("expose-event", self.exposeTextViewTag)
-        
+
         self.textTag = textBuffer.create_tag("first",
                                         foreground_gdk=gtk.gdk.color_parse(self.actionColor),
                                         font=self.fontName)
         textBuffer.apply_tag(self.textTag, textBuffer.get_start_iter(), textBuffer.get_end_iter())
-        
+
         self.textView.set_cursor_visible(True)
         self.textView.set_wrap_mode(gtk.WRAP_WORD)
         self.textView.set_size_request(300, 60)
-        
+
         #textLabel = gtk.Label("按Enter可保存,按Shift+Enter可输入多行内容")
-        
+
         scrollWindow.add(self.textView)
         self.textVbox.pack_start(scrollWindow)
         #self.textVbox.pack_start(textLabel)
         self.textAlign.add(self.textVbox)
         self.textWindow.add(self.textAlign)
 
-        
+
         self.textWindow.set_focus(self.textView)
-    
+
     def exposeTextViewTag(self, widget, event):
         ''' expose of textView'''
         textBuffer = widget.get_buffer()
@@ -586,73 +586,73 @@ class MainScrot:
         #     self.y + self.rectHeight - ey - offset,
         #     -1, 10, 10, 10
         #     )
-        
+
         # self.textWindow.grab_focus()
-        
+
     def hideTextWindow(self):
         '''Hide text window.'''
         self.showTextWindowFlag = False
         self.textView.get_buffer().set_text("")
         self.textWindow.hide_all()
-        
-    
+
+
     def getInputText(self):
         '''Get input text.'''
         textBuffer = self.textView.get_buffer()
         return (textBuffer.get_text(textBuffer.get_start_iter(), textBuffer.get_end_iter())).rstrip(" ")
-        
+
     def setActionType(self, aType):
         '''Set action. type'''
-        self.action = aType    
+        self.action = aType
         self.currentAction = None
-        
+
     def createActionButton(self, iconName, helpText):
         '''Create action button.'''
         #actionButton = gtk.Button()
         actionButton = gtk.ToggleButton()
         drawSimpleButton(actionButton, iconName, helpText)
         self.toolBox.pack_start(actionButton)
-        
+
         return actionButton
-    
+
     def createOtherButton(self, iconName, helpText):
         ''' no toggle button'''
         Button = gtk.Button()
         drawSimpleButton(Button, iconName, helpText)
         self.toolBox.pack_start(Button)
         return Button
-    
+
     def createSizeButton(self, iconName, index):
         ''' size button'''
         Button = gtk.Button()
         drawSizeButton(Button, iconName, index, self.getIconIndex)
         self.sizeBox.pack_start(Button)
         return Button
-    
+
     def createColorButton(self, iconName, above = True):
         button = gtk.Button()
         drawColorButton(button, iconName)
-        
+
         if above:
             self.aboveHbox.pack_start(button)
         else:
             self.belowHbox.pack_start(button)
         return button
-    
+
     def setButtonColor(self, colorName):
         modifyBackground(self.colorBox, self.colorMap[colorName])
         self.actionColor = self.colorMap[colorName]
-        
+
     def showToolbar(self):
         '''Show toolbar.'''
         self.showToolbarFlag = True
         self.toolbarWindow.show_all()
-        
+
     def hideToolbar(self):
         '''Hide toolbar.'''
         self.showToolbarFlag = False
         self.toolbarWindow.hide_all()
-    
+
     def showColorbar(self):
         '''show colorbar '''
         if self.action == ACTION_TEXT:
@@ -664,49 +664,49 @@ class MainScrot:
         self.showColorbarFlag = True
         self.adjustColorbar()
         self.colorbarWindow.show_all()
-        
-      
-    
+
+
+
     def hideColorbar(self):
         '''hide colorbar'''
         self.showColorbarFlag = False
         self.colorbarWindow.hide_all()
-      
-  
+
+
     def adjustToolbar(self):
         '''Adjust toolbar position.'''
         (x, y, self.toolbarWidth, self.toolbarHeight, depth) = self.toolbarWindow.window.get_geometry()
         colorbarHeight = 32
-        
-        
+
+
         self.toolbarX = (self.x + self.rectWidth - self.toolbarWidth, self.toolbarOffsetX)[self.x + self.rectWidth - self.toolbarWidth < self.toolbarOffsetX]
-        
+
         if self.y + self.rectHeight + self.toolbarOffsetY + self.toolbarHeight + colorbarHeight + 5 < self.height:
             self.toolbarY = self.y + self.rectHeight + self.toolbarOffsetY
         elif self.y - self.toolbarOffsetY - self.toolbarHeight -colorbarHeight - 5 > 0:
             self.toolbarY = self.y - self.toolbarOffsetY - self.toolbarHeight
         else:
             self.toolbarY = self.y + self.toolbarOffsetY
-    
-           
+
+
         self.toolbarWindow.move(int(self.toolbarX), int(self.toolbarY))
-    
+
     def adjustColorbar(self):
         '''Adjust Colorbar position '''
         if self.toolbarY < self.y:
             colorbarY =  self.toolbarY - self.toolbarHeight - 8
         else:
             colorbarY = self.toolbarY + self.toolbarHeight + 5
-        
+
         colorbarX = self.toolbarX
-        
+
         self.colorbarWindow.move(int(colorbarX), int(colorbarY))
-        
+
     def getEventCoord(self, event):
         '''Get event coord.'''
         (rx, ry) = event.get_root_coords()
         return (int(rx), int(ry))
-        
+
     def buttonPress(self, widget, event):
         '''Button press.'''
         self.dragFlag = True
@@ -714,17 +714,17 @@ class MainScrot:
         # print "buttonPress: %s" % (str(event.get_root_coords()))
         if self.action == ACTION_WINDOW:
                 self.windowFlag = False
-            
+
         elif self.action == ACTION_INIT:
             (self.x, self.y) = self.getEventCoord(event)
-            
+
         elif self.action == ACTION_SELECT:
             # Init drag position.
             self.dragPosition = self.getPosition(event)
-            
+
             # Set cursor.
             self.setCursor(self.dragPosition)
-            
+
             # Get drag coord and offset.
             (self.dragStartX, self.dragStartY) = self.getEventCoord(event)
             self.dragStartOffsetX = self.dragStartX - self.x
@@ -750,7 +750,7 @@ class MainScrot:
                 self.currentAction = LineAction(ACTION_LINE, self.actionSize, self.actionColor)
                 self.currentAction.startDraw(self.getEventCoord(event))
         elif self.action == ACTION_TEXT:
-            
+
             if self.textWindow.get_visible():
                 content = self.getInputText()
                 if content != "":
@@ -764,7 +764,7 @@ class MainScrot:
                         self.actionList.append(textAction)
                     self.hideTextWindow()
                     self.setAllInactive()
-                    
+
                     self.window.queue_draw()
                 else:
                     self.hideTextWindow()
@@ -772,40 +772,40 @@ class MainScrot:
 
             else:
                 self.showTextWindow(self.getEventCoord(event))
-        
+
         if self.action in [ACTION_RECTANGLE, ACTION_ELLIPSE, ACTION_ARROW, ACTION_LINE] and self.showToolbarFlag and self.y < self.toolbarY < self.y + self.rectHeight:
             self.hideToolbar()
             self.hideColorbar()
 
-        
+
 
         if self.currentTextAction and self.action == None:
             currentX, currentY = self.getEventCoord(event)
             drawTextX,drawTextY = self.currentTextAction.getLayoutInfo()[:2]
             self.textDragOffsetX = currentX - drawTextX
             self.testDragOffsetY = currentY - drawTextY
-            self.textDragFlag = True 
-             
-    
+            self.textDragFlag = True
+
+
     def motionNotify(self, widget, event):
         '''Motion notify.'''
         if self.dragFlag:
             # print "motionNotify: %s" % (str(event.get_root_coords()))
             (ex, ey) = self.getEventCoord(event)
-             
-            
-            if self.action == ACTION_WINDOW and not self.windowFlag: 
-                
+
+
+            if self.action == ACTION_WINDOW and not self.windowFlag:
+
                 self.action = ACTION_INIT
                 (self.x, self.y) = self.getEventCoord(event)
                 self.window.queue_draw()
-                
-                
+
+
             elif self.action == ACTION_INIT:
                 (self.rectWidth, self.rectHeight) = (ex - self.x, ey - self.y)
                 self.window.queue_draw()
             elif self.action == ACTION_SELECT:
-                
+
                 if self.dragPosition == DRAG_INSIDE:
                     self.x = min(max(ex - self.dragStartOffsetX, 0), self.width - self.rectWidth)
                     self.y = min(max(ey - self.dragStartOffsetY, 0), self.height - self.rectHeight)
@@ -828,43 +828,43 @@ class MainScrot:
                     self.dragFrameLeft(ex, ey)
                 elif self.dragPosition == DRAG_BOTTOM_RIGHT_CORNER:
                     self.dragFrameBottom(ex, ey)
-                    self.dragFrameRight(ex, ey)                      
+                    self.dragFrameRight(ex, ey)
                 self.window.queue_draw()
-                
+
             elif self.action == ACTION_RECTANGLE:
                 self.currentAction.drawing((ex, ey), (self.x, self.y, self.rectWidth, self.rectHeight))
-                
+
                 self.window.queue_draw()
             elif self.action == ACTION_ELLIPSE:
                 self.currentAction.drawing((ex, ey), (self.x, self.y, self.rectWidth, self.rectHeight))
-                
+
                 self.window.queue_draw()
             elif self.action == ACTION_ARROW:
                 self.currentAction.drawing((ex, ey), (self.x, self.y, self.rectWidth, self.rectHeight))
-                
+
                 self.window.queue_draw()
             elif self.action == ACTION_LINE:
                 self.currentAction.drawing((ex, ey), (self.x, self.y, self.rectWidth, self.rectHeight))
-                
+
                 self.window.queue_draw()
         else:
             if self.action == ACTION_SELECT:
                 self.setCursor(self.getPosition(event))
-           
+
             elif self.action == ACTION_WINDOW:
                 setPixbufCursor(self.window, "start_cursor.png")
-            
+
             elif self.action in (ACTION_RECTANGLE, ACTION_ELLIPSE):
                 setCursor(self.window, gtk.gdk.TCROSS)
-            
+
             elif self.action == ACTION_LINE:
                 setCursor(self.window, gtk.gdk.PENCIL)
             elif self.action == ACTION_TEXT:
                 setCursor(self.window, gtk.gdk.XTERM)
             else:
                 self.window.window.set_cursor(None)
-                
-                
+
+
             if self.windowFlag:
                 self.hideToolbar()
                 (wx, wy) = self.getEventCoord(event)
@@ -874,28 +874,28 @@ class MainScrot:
                         self.y = eachCoord.y
                         self.rectWidth = eachCoord.width
                         self.rectHeight = eachCoord.height
-                
+
                 self.window.queue_draw()
-                
-        
-                
+
+
+
         if self.action == None:
 
-            (tx, ty) = self.getEventCoord(event)       
+            (tx, ty) = self.getEventCoord(event)
 
-            
+
             if self.textDragFlag:
                 self.currentTextAction.updateCoord(tx - self.textDragOffsetX, ty - self.textDragOffsetY - 10)
                 self.drawTextLayoutFlag = True
                 self.window.queue_draw()
-                
+
             else:
                 for eachAction, info in self.textActionInfo.items():
                     if info[0] < tx < info[0]+info[2] and info[1] < ty < info[1]+info[3]:
                         self.currentTextAction = eachAction
 
 
-                        
+
             if self.currentTextAction:
                 drawTextX, drawTextY, drawTextWidth, drawTextHeight = self.currentTextAction.getLayoutInfo()
                 if drawTextX < tx < drawTextX + drawTextWidth and drawTextY < ty < drawTextY + drawTextHeight:
@@ -903,11 +903,11 @@ class MainScrot:
                     setCursor(self.window, gtk.gdk.FLEUR)
                     self.window.queue_draw()
                 else:
-                    self.drawTextLayoutFlag = False    
+                    self.drawTextLayoutFlag = False
                     self.currentTextAction = None
                     self.window.window.set_cursor(None)
                     self.window.queue_draw()
-                            
+
     def buttonRelease(self, widget, event):
         '''Button release.'''
         self.textDragFlag = False
@@ -920,27 +920,27 @@ class MainScrot:
                 self.window.queue_draw()
             else:
                 self.windowFlag = True
-                
-            
+
+
         elif self.action == ACTION_INIT:
             self.action = ACTION_SELECT
             (ex, ey) = self.getEventCoord(event)
-            
+
             # Adjust value when button release.
             if ex > self.x:
                 self.rectWidth = ex - self.x
             else:
                 self.rectWidth = fabs(ex - self.x)
                 self.x = ex
-                
+
             if ey > self.y:
                 self.rectHeight = ey - self.y
             else:
                 self.rectHeight = fabs(ey - self.y)
                 self.y = ey
-                
+
             self.window.queue_draw()
-            
+
             self.showToolbar()
         elif self.action == ACTION_SELECT:
             pass
@@ -948,27 +948,27 @@ class MainScrot:
             self.currentAction.endDraw(self.getEventCoord(event), (self.x, self.y, self.rectWidth, self.rectHeight))
             self.actionList.append(self.currentAction)
             self.currentAction = None
-            
+
             self.window.queue_draw()
         elif self.action == ACTION_ELLIPSE:
             self.currentAction.endDraw(self.getEventCoord(event), (self.x, self.y, self.rectWidth, self.rectHeight))
             self.actionList.append(self.currentAction)
             self.currentAction = None
-            
+
             self.window.queue_draw()
         elif self.action == ACTION_ARROW:
             self.currentAction.endDraw(self.getEventCoord(event), (self.x, self.y, self.rectWidth, self.rectHeight))
             self.actionList.append(self.currentAction)
             self.currentAction = None
-            
+
             self.window.queue_draw()
         elif self.action == ACTION_LINE:
             self.currentAction.endDraw(self.getEventCoord(event), (self.x, self.y, self.rectWidth, self.rectHeight))
             self.actionList.append(self.currentAction)
             self.currentAction = None
-            
+
             self.window.queue_draw()
-        
+
         if self.action in [ACTION_RECTANGLE, ACTION_ELLIPSE, ACTION_ARROW, ACTION_LINE, ACTION_TEXT] and not self.showToolbarFlag and self.y < self.toolbarY < self.y + self.rectHeight:
             self.adjustToolbar()
             self.showToolbar()
@@ -985,15 +985,15 @@ class MainScrot:
             self.fontName = self.currentTextAction.getFontname()
             modifyBackground(self.colorBox, self.actionColor)
             self.fontLabel.set_label(self.fontName)
-            
+
             self.actionTextButton.set_active(True)
             self.showTextWindow(self.getEventCoord(event))
             self.textModifyFlag = True
-       
+
         if isDoubleClick(event) and self.action == ACTION_SELECT and self.x < ex < self.x + self.rectWidth and self.y < ey < self.y + self.rectHeight:
             self.saveSnapshot()
             self.buttonRelease(widget, event)
-         
+
 
     def registerKeyBinding(self, keyEventName, callback):
         '''Register a keybinding'''
@@ -1003,7 +1003,7 @@ class MainScrot:
         '''Unregister a keybinding'''
         if self.keyBindings.has_key(keyEventName):
             del self.keyBindings[keyEventName]
-            
+
     def keyPress(self, widget, event):
         '''process key press event'''
         keyEventName = getKeyEventName(event)
@@ -1018,47 +1018,47 @@ class MainScrot:
             gtk.FILE_CHOOSER_ACTION_SAVE,
             (gtk.STOCK_CANCEL, gtk.RESPONSE_REJECT,
              gtk.STOCK_SAVE, gtk.RESPONSE_ACCEPT))
-        
+
         dialog.set_action(gtk.FILE_CHOOSER_ACTION_SAVE)
         dialog.set_default_response(gtk.RESPONSE_ACCEPT)
         dialog.set_position(gtk.WIN_POS_MOUSE)
         dialog.set_local_only(True)
         dialog.set_current_folder(os.environ['HOME'])
         dialog.set_current_name("%s%s.%s" % (DEFAULT_FILENAME, getFormatTime(), self.saveFiletype))
-        
+
         optionMenu = gtk.OptionMenu()
         optionMenu.set_size_request(155, -1)
         menu = gtk.Menu()
         menu.set_size_request(155, -1)
-        
+
         pngItem = makeMenuItem('PNG (*.png)',
                      lambda item, data: self.setSaveFiletype(dialog, 'png'))
-        
+
         jpgItem = makeMenuItem('JPEG (*.jpeg)',
                      lambda item, data: self.setSaveFiletype(dialog, 'jpeg'))
-        
+
         bmpItem = makeMenuItem('BMP (*.bmp)',
                      lambda item, data: self.setSaveFiletype(dialog, 'bmp'))
-        
-        
-        
-        
+
+
+
+
         menu.append(pngItem)
         menu.append(jpgItem)
         menu.append(bmpItem)
         optionMenu.set_menu(menu)
-        
-        
+
+
         hbox = gtk.HBox()
         hbox.pack_end(optionMenu, False, False)
         dialog.vbox.pack_start(hbox, False, False)
-        hbox.show_all()                          
-        
-        
+        hbox.show_all()
+
+
         self.hideToolbar()
         if self.showColorbarFlag:
             self.hideColorbar()
-            
+
         response = dialog.run()
         if response == gtk.RESPONSE_ACCEPT:
             filename = dialog.get_filename()
@@ -1067,33 +1067,33 @@ class MainScrot:
         elif response == gtk.RESPONSE_REJECT:
             self.adjustToolbar()
             self.showToolbar()
-            
+
             if self.isHaveOneToggled():
                 self.showColorbar()
             print 'Closed, no files selected'
         dialog.destroy()
 
-        
+
     def setSaveFiletype(self, dialog, filetype):
         ''' save filetype '''
         dialog.set_current_name("%s%s.%s" % (DEFAULT_FILENAME, getFormatTime(), filetype))
         self.saveFiletype = filetype
-       
+
     def saveSnapshot(self, filename=None, filetype='png'):
         '''Save snapshot.'''
         # Init cairo.
         cr = self.window.window.cairo_create()
-        
+
         # Draw desktop background.
         self.drawDesktopBackground(cr)
-        
+
         # Draw action list.
         for action in self.actionList:
             action.expose(cr)
         # Draw text Action list.
         for eachTextAction in self.textActionList:
             eachTextAction.expose(cr)
-            
+
         # Get snapshot.
         pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, int(self.rectWidth), int(self.rectHeight))
         pixbuf.get_from_drawable(
@@ -1101,7 +1101,7 @@ class MainScrot:
             self.x, self.y,
             0, 0,
             int(self.rectWidth), int(self.rectHeight))
-        
+
         # Save snapshot.
         if filename == None:
             # Save snapshot to clipboard if filename is None.
@@ -1113,40 +1113,40 @@ class MainScrot:
             # Otherwise save to local file.
             pixbuf.save(filename, filetype)
             tipContent = __("Tip save to file")
-            
-        
 
-        
+
+
+
         # Exit
         self.window.window.set_cursor(None)
         self.destroy(self.window)
-        
+
          # tipWindow
         cmd = ('python', 'tipswindow.py', tipContent)
         subprocess.Popen(cmd)
 
-        
+
     def redraw(self, widget, event):
         '''Redraw.'''
         # Init cairo.
         cr = widget.window.cairo_create()
-        
+
         # Draw desktop background.
         self.drawDesktopBackground(cr)
-        
+
         # Draw mask.
         self.drawMask(cr)
-        
+
         # Draw toolbar.
         if self.showToolbarFlag:
             self.adjustToolbar()
             self.adjustColorbar()
-            
+
         # Draw action list.
         for action in self.actionList:
             if action != None:
                 action.expose(cr)
-        
+
         # Draw Text Action list.
         for eachTextAction in self.textActionList:
             eachTextAction.expose(cr)
@@ -1155,13 +1155,13 @@ class MainScrot:
         # Draw current action.
         if self.currentAction != None:
             self.currentAction.expose(cr)
-        
+
 
         # draw currentText layout
         if self.drawTextLayoutFlag:
             drawAlphaRectangle(cr, *self.currentTextAction.getLayoutInfo())
-    
-    
+
+
         #draw magnifier
         if self.action == ACTION_WINDOW and self.rectWidth:
             drawMagnifier(cr, self.window, self.currentX, self.currentY,
@@ -1177,17 +1177,17 @@ class MainScrot:
                 drawRoundTextRectangle(cr, self.x + 5, self.y - 35, 85, 30, 7,'%d x %d' % (fabs(self.rectWidth), fabs(self.rectHeight)), 0.7)
             elif self.action in [None, ACTION_SELECT, ACTION_WINDOW, ACTION_INIT]:
                 drawRoundTextRectangle(cr, self.x + 5 , self.y + 5 , 85, 30, 7,'%d x %d' % (fabs(self.rectWidth), fabs(self.rectHeight)), 0.7)
-            
-        
+
+
         if widget.get_child() != None:
             widget.propagate_expose(widget.get_child(), event)
-    
+
         return True
-    
+
     def drawDesktopBackground(self, cr):
         '''Draw desktop.'''
-        drawPixbuf(cr, self.desktopBackground)    
-        
+        drawPixbuf(cr, self.desktopBackground)
+
     def drawMask(self, cr):
         '''Draw mask.'''
         # Adjust value when create selection area.
@@ -1204,7 +1204,7 @@ class MainScrot:
         else:
             y = self.y + self.rectHeight
             rectHeight = fabs(self.rectHeight)
-        
+
         # Draw top.
         cr.set_source_rgba(0, 0, 0, 0.5)
         cr.rectangle(0, 0, self.width, y)
@@ -1224,68 +1224,68 @@ class MainScrot:
         cr.set_source_rgba(0, 0, 0, 0.5)
         cr.rectangle(x + rectWidth, y, self.width - x - rectWidth, rectHeight)
         cr.fill()
-        
+
     def drawFrame(self, cr):
         '''Draw frame.'''
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.set_line_width(self.frameLineWidth)
         cr.rectangle(self.x - self.frameLineWidth, self.y - self.frameLineWidth, self.rectWidth + self.frameLineWidth * 2, self.rectHeight + self.frameLineWidth * 2)
         cr.stroke()
-        
+
     def drawDragPoint(self, cr):
         '''Draw drag point.'''
         # Draw left top corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x - self.dragPointRadius - 1, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw right top corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x + self.rectWidth + self.dragPointRadius - 3, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw left bottom corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x - self.dragPointRadius - 1, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw right bottom corner.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x + self.rectWidth + 1, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw top side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x + self.rectWidth / 2, self.y - self.dragPointRadius - 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw bottom side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x + self.rectWidth / 2, self.y + self.rectHeight + 1, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw left side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x - self.dragPointRadius - 1, self.y + self.rectHeight / 2, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
         # Draw right side.
         cr.set_source_rgb(*colorHexToCairo(self.frameColor))
         cr.rectangle(self.x + self.rectWidth + 1, self.y + self.rectHeight / 2, self.dragPointRadius, self.dragPointRadius)
         cr.fill()
-        
+
     def getDesktopSnapshot(self):
         '''Get desktop snapshot.'''
-        rootWindow = gtk.gdk.get_default_root_window() 
-        [self.width, self.height] = rootWindow.get_size() 
+        rootWindow = gtk.gdk.get_default_root_window()
+        [self.width, self.height] = rootWindow.get_size()
         pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, self.width, self.height)
-        return pixbuf.get_from_drawable(rootWindow, rootWindow.get_colormap(), 0, 0, 0, 0, self.width, self.height) 
-        
+        return pixbuf.get_from_drawable(rootWindow, rootWindow.get_colormap(), 0, 0, 0, 0, self.width, self.height)
+
     def destroy(self, widget, data=None):
         '''Destroy main window.'''
         self.window.window.set_cursor(None)
         gtk.main_quit()
-        
+
     def getDragPointCoords(self):
         '''Get drag point coords.'''
         return (
@@ -1306,16 +1306,16 @@ class MainScrot:
             # Right side.
             (self.x + self.rectWidth - self.dragPointRadius, self.y + self.rectHeight / 2 - self.dragPointRadius),
             )
-        
+
     def getPosition(self, event):
         '''Get drag position.'''
         # Get event position.
         (ex, ey) = self.getEventCoord(event)
-        
+
         # Get drag point coords.
         pWidth = pHeight = self.dragPointRadius * 2
         ((tlX, tlY), (trX, trY), (blX, blY), (brX, brY), (tX, tY), (bX, bY), (lX, lY), (rX, rY)) = self.getDragPointCoords()
-        
+
         # Calcuate drag position.
         if isInRect((ex, ey), (self.x, self.y, self.rectWidth, self.rectHeight)):
             return DRAG_INSIDE
@@ -1337,7 +1337,7 @@ class MainScrot:
             return DRAG_RIGHT_SIDE
         else:
             return DRAG_OUTSIDE
-        
+
     def setCursor(self, position):
         '''Set cursor.'''
         if position == DRAG_INSIDE:
@@ -1360,38 +1360,38 @@ class MainScrot:
             setCursor(self.window, gtk.gdk.LEFT_SIDE)
         elif position == DRAG_RIGHT_SIDE:
             setCursor(self.window, gtk.gdk.RIGHT_SIDE)
-            
+
     def dragFrameTop(self, ex, ey):
         '''Drag frame top.'''
         maxY = self.y + self.rectHeight
         self.rectHeight = self.rectHeight - min(self.rectHeight, (ey - self.y))
-        self.y = min(ey, maxY) 
-    
+        self.y = min(ey, maxY)
+
     def dragFrameBottom(self, ex, ey):
         '''Drag frame bottom.'''
         self.rectHeight = max(0, ey - self.y)
-    
+
     def dragFrameLeft(self, ex, ey):
         '''Drag frame left.'''
         maxX = self.x + self.rectWidth
         self.rectWidth = self.rectWidth - min(self.rectWidth, (ex - self.x))
         self.x = min(ex, maxX)
-    
+
     def dragFrameRight(self, ex, ey):
         '''Drag frame right.'''
         self.rectWidth = max(0, ex - self.x)
-        
+
     def undo(self):
         '''Undo'''
         if self.textWindow.get_visible():
             self.hideTextWindow()
-            
+
         if self.actionList:
             tempAction = self.actionList.pop()
             if tempAction.getActionType() == ACTION_TEXT:
                 self.textActionList.pop()
                 del self.textActionInfo[tempAction]
-                
+
         else:
             self.window.window.set_cursor(None)
             self.action = ACTION_WINDOW
@@ -1401,10 +1401,10 @@ class MainScrot:
             self.hideToolbar()
             if self.showColorbarFlag:
                 self.setAllInactive()
-        
+
         self.window.queue_draw()
-        
-        
+
+
     def drawWindowRectangle(self, cr):
         '''Draw frame.'''
         cr.set_line_width(4.5)
@@ -1413,8 +1413,8 @@ class MainScrot:
         cr.stroke()
     def getCurrentCoord(self, widget):
         '''get Current Coord '''
-        (self.currentX, self.currentY) = widget.window.get_pointer()[:2] 
+        (self.currentX, self.currentY) = widget.window.get_pointer()[:2]
 
-    
+
 if __name__ == "__main__":
     MainScrot()

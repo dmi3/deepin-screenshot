@@ -41,20 +41,20 @@ def setClickableCursor(widget):
     '''Set click-able cursor.'''
     # Use widget in lambda, and not widget pass in function.
     # Otherwise, if widget free before callback, you will got error:
-    # free variable referenced before assignment in enclosing scope, 
+    # free variable referenced before assignment in enclosing scope,
     widget.connect("enter-notify-event", lambda w, e: setCursor(w, gtk.gdk.HAND2))
     widget.connect("leave-notify-event", lambda w, e: setDefaultCursor(w))
 
 def setDefaultCursor(widget):
     '''Set default cursor.'''
     widget.window.set_cursor(None)
-    
+
     return False
 
 def setCursor(widget, cursorType):
     '''Set cursor.'''
     widget.window.set_cursor(gtk.gdk.Cursor(cursorType))
-    
+
     return False
 
 def getScreenSize():
@@ -79,7 +79,7 @@ def showHelpTooltip(widget, helpText):
     widget.set_has_tooltip(True)
     widget.set_tooltip_text(helpText)
     widget.trigger_tooltip_query()
-    
+
     return False
 
 def modifyBackground(widget, color):
@@ -89,7 +89,7 @@ def modifyBackground(widget, color):
 def gdkColorToString(gdkcolor):
     '''gdkColor to string '''
     return "#%0.2x%0.2x%0.2x" % (gdkcolor.red / 256, gdkcolor.green / 256, gdkcolor.blue / 256)
-     
+
 def encode(text):
     return unicode(text, sys.getfilesystemencoding())
 

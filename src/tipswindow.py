@@ -36,7 +36,7 @@ class tipWindow():
         self.alpha = 1
         self.paddingX = 10
         self.content = content
-        
+
         self.tipWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.tipWindow.set_keep_above(True)
         self.tipWindow.set_size_request(-1, -1)
@@ -48,12 +48,12 @@ class tipWindow():
         self.tipWindow.set_skip_taskbar_hint(True)
         self.tipWindow.set_skip_pager_hint(True)
 
-    
-        
+
+
         self.tipWindow.move(screenWidth - 250 , 34)
         self.tipWindow.connect('expose-event', self.tipExpose)
         self.tipWindow.connect("size-allocate", lambda w, a: updateShape(w, a, 4))
-        
+
         # Create tooltips label.
         self.label = gtk.Label()
         self.label.set_markup("<span foreground='#00AEFF' size='12000'>%s</span>" % (content))
@@ -65,9 +65,9 @@ class tipWindow():
         self.tipWindow.add(self.align)
         glib.timeout_add(50, lambda : self.timeoutHandler(self.tipWindow))
         self.tipWindow.show_all()
-        
+
         gtk.main()
-    
+
     def tipExpose(self, widget, event, data=None):
         self.alpha -= self.delta
         widget.set_opacity(self.alpha)
@@ -81,12 +81,12 @@ class tipWindow():
 
         if widget.get_child() != None:
             widget.propagate_expose(widget.get_child(), event)
-            
+
         return True
-    
+
     def getAlpha(self):
         return self.alpha
-        
+
     def timeoutHandler(self, widget):
         if self.getAlpha() <= 0:
             gtk.main_quit()
@@ -102,7 +102,7 @@ class countdownWindow():
         screenWidth, screenHeight = gtk.gdk.get_default_root_window().get_size()
         self.count = count
         self.paddingX = 10
-        
+
         self.tipWindow = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.tipWindow.set_skip_taskbar_hint(True)
         self.tipWindow.set_skip_pager_hint(True)
@@ -116,7 +116,7 @@ class countdownWindow():
         self.tipWindow.move(screenWidth - 200 , 34)
         self.tipWindow.connect('expose-event', self.tipExpose)
         self.tipWindow.connect("size-allocate", lambda w, a: updateShape(w, a, 4))
-        
+
         # Create tooltips label.
         self.label = gtk.Label()
         self.label.set_markup("<span foreground='#00AEFF' size='36000'>%d</span>" % (self.count))
@@ -128,9 +128,9 @@ class countdownWindow():
         self.tipWindow.add(self.align)
         glib.timeout_add(1000, lambda : self.timeoutHandler(self.tipWindow))
         self.tipWindow.show_all()
-        
+
         gtk.main()
-    
+
     def tipExpose(self, widget, event, data=None):
         self.label.set_markup("<span foreground='#00AEFF' size='36000'>%d</span>" % (self.count))
         cr = widget.window.cairo_create()
@@ -143,25 +143,25 @@ class countdownWindow():
 
         if widget.get_child() != None:
             widget.propagate_expose(widget.get_child(), event)
-            
+
         return True
-        
+
     def timeoutHandler(self, widget):
         if self.count == 1:
             self.tipWindow.hide_all()
         elif self.count <= 0:
             gtk.main_quit()
-            return False   
+            return False
         else:
             pass
         self.count -= 1
         widget.queue_draw()
         return True
-        
+
 if __name__ == '__main__':
     ''' '''
     if len(sys.argv) >= 2:
         tipWindow(sys.argv[1])
-    
 
-    
+
+

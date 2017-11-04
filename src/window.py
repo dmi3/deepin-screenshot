@@ -31,7 +31,7 @@ WM_HINTS = disp.intern_atom("WM_HINTS", True)
 WM_STATE = disp.intern_atom("WM_STATE", True)
 WM_DESKTOP  = disp.intern_atom("_NET_WM_DESKTOP", True)
 
- 
+
 def findWindowByProperty(xlibWindow, atom=WM_STATE):
     ''' find Window by property '''
     result = xlibWindow.query_tree().children
@@ -44,7 +44,7 @@ def findWindowByProperty(xlibWindow, atom=WM_STATE):
                 child = children
             else:
                 child = findWindowByProperty(children, atom)
-        
+
         return child
 
 def getClientWindow(target):
@@ -63,18 +63,18 @@ def filterWindow():
     ''' without other window'''
     windowList = []
 
-    
+
     for xlibWindow in enumXlibWindow():
         if xlibWindow.get_property(WM_DESKTOP, WM_HINTS, 0, 0):
             windowList.append(xlibWindow)
         else:
              if findWindowByProperty(xlibWindow, WM_DESKTOP):
                  windowList.append(xlibWindow)
-    
+
 
     return windowList
-             
-    
+
+
 
 def getXlibPointerWindow():
     ''' grab pointer window '''
@@ -84,18 +84,18 @@ def getXlibFocusWindow():
     ''' grab focus window'''
     return disp.get_input_focus().focus
 
-    
+
 def isFullScreen(xlibWindow):
     '''whether is xlibWindow fullScreen '''
 
-        
+
 
 def getWindowCoord(xlibWindow):
     ''' covert xlibWindow's coord'''
-    
+
     clientWindow = getClientWindow(xlibWindow)
-    
-    
+
+
     if xlibWindow != clientWindow:
         x = xlibWindow.get_geometry().x + clientWindow.get_geometry().x
         y = xlibWindow.get_geometry().y + clientWindow.get_geometry().y - 26
@@ -119,7 +119,7 @@ def getFocusWindowCoord():
 
 def enumXlibWindow():
     ''' enumerate child window of rootWindow'''
-             
+
     return rootWindow.query_tree().children
 
 
@@ -133,16 +133,16 @@ def getUsertimeWindow():
     for eachWindow in enumXlibWindow():
        sequence_number = eachWindow.get_geometry().sequence_number
        usertimeWindow[sequence_number] = eachWindow
-    
+
     return sorted(usertimeWindow.iteritems(), key=lambda k: k[0], reverse=True)
-    
-    
+
+
 
 def enumGtkWindow():
     '''  enumerate gtkWindow from xlibWindow '''
-    
+
     gtkWindowList = []
-    
+
     for eachWindow in enumXlibWindow():
         gtkWindowList.append(xlibWindowToGtkWindow(eachWindow))
     return gtkWindowList
@@ -158,36 +158,36 @@ def convertCoord(x, y, width, height):
     ''' cut out overlop the screen'''
     xWidth = x + width
     yHeight = y + height
-       
+
     if x < 0 and y > 0 and  y < yHeight < screenHeight:
         return (0, y, width+x, height)
-    
+
     if x < 0 and yHeight > screenHeight:
         return (0, y, width+x, height - (yHeight - screenHeight))
-    
+
     if xWidth > screenWidth and yHeight > screenHeight:
         return (x, y, width - (xWidth - screenWidth), height - (yHeight - screenHeight))
-    
+
     if  x > 0 and x < xWidth < screenWidth and yHeight > screenHeight:
         return (x, y, width, height - (yHeight - screenHeight))
-    
+
     if xWidth > screenWidth and y > 0 and y < yHeight < screenHeight:
         return (x, y, width - (xWidth - screenWidth), height)
-    
+
     if x < 0 and y < 0:
         return (0, 0, xWidth, yHeight)
-    
+
     if x > 0 and x < xWidth < screenWidth and y < 0:
         return (x, 0, width, yHeight)
-    
+
     if x > 0 and xWidth > screenWidth and y < 0:
-        return (x, 0, width - (xWidth - screenWidth), yHeight) 
-        
-    
-    
+        return (x, 0, width - (xWidth - screenWidth), yHeight)
+
+
+
     return (x, y, width, height)
-    
-    
+
+
 
 
 def getScrotWindowInfo():
@@ -196,36 +196,35 @@ def getScrotWindowInfo():
     scrotWindowInfo = []
     scrotWindowInfo.append(coordInfo(0, 0, screenWidth, screenHeight))
     #(cx, cy, cWidth, cHeight) = getPointerWindowCoord()
-    
+
     for eachWindow in filterWindow():
         (x, y, width, height) = getWindowCoord(eachWindow)
         scrotWindowInfo.append(coordInfo(*convertCoord(x, y, width, height)))
-    
+
 
     return scrotWindowInfo
 
 
 def getScrotPixbuf(fullscreen=True):
     ''' save snapshot to file with filetype. '''
-    rootWindow = gtk.gdk.get_default_root_window() 
-    
+    rootWindow = gtk.gdk.get_default_root_window()
+
     if not fullscreen:
         (x, y, width, height) = convertCoord(*getWindowCoord(getXlibPointerWindow()))
     else:
-        (x, y, width, height, depth) = rootWindow.get_geometry() 
-    
+        (x, y, width, height, depth) = rootWindow.get_geometry()
+
     pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, width, height)
     pixbuf.get_from_drawable(rootWindow, rootWindow.get_colormap(), x, y, 0, 0, width, height)
     return pixbuf
 
 
-    
-
-    
 
 
-        
 
 
-    
-        
+
+
+
+
+
