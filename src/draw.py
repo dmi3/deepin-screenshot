@@ -335,12 +335,10 @@ def drawMagnifier(cr, widget, x, y, sizeContent, tipContent = "", rgbContent = "
     else:
         offsetX = 3
 
-    pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, pixbufWidth, pixbufHeight)
-    pixbuf.get_from_drawable(widget.get_window(), widget.get_window().get_colormap(),
-            int(fabs(x - pixbufWidth / 2)), int(fabs(y - pixbufHeight / 2)),
-            0, 0,
-            pixbufWidth, pixbufHeight)
-
+    rootWindow = gtk.gdk.get_default_root_window()
+    [width, height] = rootWindow.get_size()
+    pixbuf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, False, 8, width, height)
+    pixbuf.get_from_drawable(rootWindow, rootWindow.get_colormap(), int(fabs(x - pixbufWidth / 2)), int(fabs(y - pixbufHeight / 2)), 0, 0, width, height)
 
     #set zoom scale and translate
     cr.save()
