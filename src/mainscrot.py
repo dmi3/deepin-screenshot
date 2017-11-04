@@ -428,6 +428,9 @@ class MainScrot:
         self.actionSaveButton = self.createOtherButton("save", __("Tip save"))
         self.actionSaveButton.connect("button-press-event", lambda w, e: self.saveSnapshotToFile())
 
+        self.actionSaveButton = self.createOtherButton("open", "Open file in default viewer")
+        self.actionSaveButton.connect("button-press-event", lambda w, e: self.openInDefaultViewer())
+
         separatorLabel = gtk.Button()
         drawSeparator(separatorLabel, 'sep')
         self.toolBox.pack_start(separatorLabel)
@@ -1019,6 +1022,13 @@ class MainScrot:
         keyEventName = getKeyEventName(event)
         if self.keyBindings.has_key(keyEventName):
             self.keyBindings[keyEventName]()
+
+    def openInDefaultViewer(self):
+        filename = "/tmp/%s%s.%s" % (DEFAULT_FILENAME, getFormatTime(), self.saveFiletype)
+        self.saveSnapshot(filename, self.saveFiletype)
+        subprocess.call(["xdg-open", filename])
+
+        dialog.destroy()
 
     def saveSnapshotToFile(self):
         '''Save file to file.'''
