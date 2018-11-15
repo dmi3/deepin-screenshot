@@ -103,7 +103,9 @@ class MainScrot:
 
         # Init window.
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.fullscreen()
+        self.window.move(0, 0)
+        self.window.set_default_size(self.desktopBackground.get_width(), self.desktopBackground.get_height())
+        self.window.set_decorated(False)
         self.window.set_icon_from_file("../theme/logo/deepin-scrot.ico")
         self.window.set_keep_above(True)
 
