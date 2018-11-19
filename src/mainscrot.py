@@ -985,15 +985,13 @@ class MainScrot:
         (ex, ey) = self.getEventCoord(event)
 
         if isMiddleClick(event):
-            color = getCoordHEX(self.window, ex, ey)
-
             clipboard = gtk.clipboard_get()
-            clipboard.set_text(color)
+            clipboard.set_text(self.pixel)
             clipboard.store()
 
             self.window.window.set_cursor(None)
 
-            cmd = ('python', 'tipswindow.py', "Copied %s to clipboard" % color)
+            cmd = ('python', 'tipswindow.py', "Copied %s to clipboard" % self.pixel)
             subprocess.Popen(cmd)
 
             self.destroy(self.window)
@@ -1192,11 +1190,12 @@ class MainScrot:
 
         #draw magnifier
         if self.action == ACTION_WINDOW and self.rectWidth:
+            self.pixel = str(getCoordHEX(self.window, self.currentX, self.currentY))
             drawMagnifier(cr, self.window, self.currentX, self.currentY,
                            '%d x %d' % (self.rectWidth, self.rectHeight),
                             '↑ Mdl clck to copy',
                             #'%s' % (__("Tip Drag")),
-                             "%s" % str(getCoordHEX(self.window, self.currentX, self.currentY)))
+                             "%s" % self.pixel)
             self.drawWindowRectangle(cr)
         elif self.rectWidth:
             #Draw frame
