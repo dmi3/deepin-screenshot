@@ -1,10 +1,16 @@
-# Deepin Screenshot
+# Deepin Screenshot (Python)
 
 Sometimes you just need to quickly grab part of screen, draw a bold red arrow with three question marks and paste it to chat. Deepin Screenshot is perfect tool for that case.
 
-<img src="https://developer.run/pic/deepin-screenshot.png">
+| Annotate | Selection |
+| - | - |
+| ![a](https://developer.run/pic/deepin-screenshot.png) | ![s](https://developer.run/pic/deepin-screenshot-selection.png) |
 
-Fork of [snapshot tools](https://github.com/linuxdeepin-packages/deepin-scrot) for linux deepin, see [AUTHORS](./AUTHORS). Best Linux alternative for Lightshot with highlighting and annotating capabilities and multiple monitor support.
+Fork of [snapshot tools](https://github.com/linuxdeepin-packages/deepin-scrot) for Linux Deepin, see [AUTHORS](./AUTHORS). Best Linux alternative for Lightshot with highlighting and annotating capabilities and multiple monitor support.
+
+
+
+*Not to be confused with [Deepin Screenshot](https://www.deepin.org/en/original/deepin-screenshot/) which is rewrite of this tool using C++. I find Python version much more portable and open to modifications and improvements.*
 
 [Original](https://github.com/linuxdeepin-packages/deepin-scrot) features:
 
