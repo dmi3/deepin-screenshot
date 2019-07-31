@@ -10,7 +10,7 @@ Fork of [snapshot tools](https://github.com/linuxdeepin-packages/deepin-scrot) f
 
 
 
-*Not to be confused with [Deepin Screenshot](https://www.deepin.org/en/original/deepin-screenshot/) which is rewrite of this tool using C++. I find Python version much more portable and open to modifications and improvements.*
+*Not to be confused with [Deepin Screenshot](https://www.deepin.org/en/original/deepin-screenshot/) which is rewrite of this tool using C++. I find Python version much more portable and open to modifications and improvements. Also it does not have enormous amount of dependencies as C++ version does.*
 
 [Original](https://github.com/linuxdeepin-packages/deepin-scrot) features:
 
